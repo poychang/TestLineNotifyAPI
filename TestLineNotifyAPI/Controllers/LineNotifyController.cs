@@ -65,5 +65,29 @@ namespace TestLineNotifyAPI.Controllers
 
             return new EmptyResult();
         }
+
+        // POST: api/LineNotify/SendWithSticker
+        /// <summary>傳送官方貼圖</summary>
+        /// <param name="msg">訊息</param>
+        [HttpPost]
+        [Route("SendWithSticker")]
+        public async Task<IActionResult> SendWithSticker([FromBody]MessageModel msg)
+        {
+            using (var client = new HttpClient())
+            {
+                client.Timeout = new TimeSpan(0, 0, 60);
+                client.BaseAddress = new Uri(_notifyUrl);
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + msg.Token);
+                var form = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("message", msg.Message),
+                    new KeyValuePair<string, string>("stickerPackageId", msg.StickerPackageId),
+                    new KeyValuePair<string, string>("stickerId", msg.StickerId)
+                });
+
+                await client.PostAsync("", form);
+            }
+            return new EmptyResult();
+        }
     }
 }
