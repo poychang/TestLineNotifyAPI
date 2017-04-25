@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TestLineNotifyAPI.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,6 +35,29 @@ namespace TestLineNotifyAPI.Controllers
                 var form = new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("message", message)
+                });
+
+                await client.PostAsync("", form);
+            }
+
+            return new EmptyResult();
+        }
+
+        // POST: api/LineNotify/SendMessage
+        /// <summary>傳送文字訊息</summary>
+        /// <param name="msg">訊息</param>
+        [HttpPost]
+        [Route("SendMessage")]
+        public async Task<IActionResult> SendMessage([FromBody]MessageModel msg)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_notifyUrl);
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + msg.Token);
+
+                var form = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("message", msg.Message)
                 });
 
                 await client.PostAsync("", form);
