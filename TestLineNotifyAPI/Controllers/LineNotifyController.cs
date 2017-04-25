@@ -89,5 +89,30 @@ namespace TestLineNotifyAPI.Controllers
             }
             return new EmptyResult();
         }
+
+        // POST: api/LineNotify/SendWithPicture
+        /// <summary>傳送圖片檔案</summary>
+        /// <param name="msg">訊息</param>
+        [HttpPost]
+        [Route("SendWithPicture")]
+        public async Task<IActionResult> SendWithPicture([FromBody]MessageModel msg)
+        {
+            using (var client = new HttpClient())
+            {
+                client.Timeout = new TimeSpan(0, 0, 60);
+                client.BaseAddress = new Uri(_notifyUrl);
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + msg.Token);
+
+                var form = new MultipartFormDataContent
+                {
+                    {new StringContent(msg.Message), "message"},
+                    {new ByteArrayContent(await new HttpClient().GetByteArrayAsync(msg.FileUri)), "imageFile", msg.Filename}
+                };
+
+                await client.PostAsync("", form);
+            }
+
+            return new EmptyResult();
+        }
     }
 }
