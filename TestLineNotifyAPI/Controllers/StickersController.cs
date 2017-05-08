@@ -17,7 +17,7 @@ namespace TestLineNotifyAPI.Controllers
         [HttpGet]
         public IActionResult GetStickers() => new JsonResult(FetchStickers());
 
-        // GET: api/Stickers/file
+        // GET: api/Stickers/1/12
         /// <summary>取得貼圖</summary>
         /// <param name="stickerPackageId">貼圖包識別碼</param>
         /// <param name="stickerId">貼圖識別碼</param>
