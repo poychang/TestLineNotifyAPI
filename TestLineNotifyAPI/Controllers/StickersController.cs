@@ -27,7 +27,7 @@ namespace TestLineNotifyAPI.Controllers
         public IActionResult GetSticker(string stickerPackageId, string stickerId)
         {
             var filename = FetchStickers().First(p => p.Stkpkgid == stickerPackageId && p.Stkid == stickerId).Img;
-            var image = System.IO.File.ReadAllBytes("Data/" + stickerPackageId + "/" + filename);
+            var image = System.IO.File.ReadAllBytes("wwwroot/Data/" + stickerPackageId + "/" + filename);
             return new FileContentResult(image, "image/png");
         }
 
@@ -35,7 +35,7 @@ namespace TestLineNotifyAPI.Controllers
         /// <returns></returns>
         private static IEnumerable<StickerModel> FetchStickers()
         {
-            const string filePath = "Data/sticker_list.json";
+            const string filePath = "wwwroot/Data/sticker_list.json";
             var fileJson = System.IO.File.ReadAllText(filePath);
 
             return JsonConvert.DeserializeObject<IEnumerable<StickerModel>>(fileJson);
