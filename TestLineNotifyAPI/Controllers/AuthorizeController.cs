@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -23,18 +24,18 @@ namespace TestLineNotifyAPI.Controllers
         private readonly string _successUri;
 
         /// <summary>建構式</summary>
-        public AuthorizeController()
+        public AuthorizeController(IConfiguration config)
         {
-            _authorizeUrl = "https://notify-bot.line.me/oauth/authorize";
-            _tokenUrl = "https://notify-bot.line.me/oauth/token";
-            //TODO: 請先填入 Line Notify 服務的識別碼及密鑰等資訊
-            _clientId = "[YOUR_CLIENT_ID]";
-            _clientSecret = "[YOUR_CLIENT_SECERT]";
-            _redirectUri = "[YOUR_CALLBACK_URL]";
-            //TODO: 可透過 State 避免 CSRF 攻擊
-            _state = "NO_STATE";
-            //TODO: 成功後轉跳之頁面
-            _successUri = "[http://XXX.XXX.XXX/LineNotifyPage]";
+            //TODO: 請先在 appsettings.json 中填入 Line Notify 服務的識別碼、密鑰、成功轉跳頁面等資訊
+            var lineConfig = config.GetSection("LineNotify");
+
+            _authorizeUrl = lineConfig.GetValue<string>("authorizeUrl");
+            _tokenUrl     = lineConfig.GetValue<string>("tokenUrl");
+            _clientId     = lineConfig.GetValue<string>("clientId");
+            _clientSecret = lineConfig.GetValue<string>("clientSecret");
+            _redirectUri  = lineConfig.GetValue<string>("redirectUri");
+            _state        = lineConfig.GetValue<string>("state");
+            _successUri   = lineConfig.GetValue<string>("successUri");
         }
 
         // GET: api/Authorize
