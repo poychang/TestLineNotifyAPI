@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using TestLineNotifyAPI.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,9 +15,12 @@ namespace TestLineNotifyAPI.Controllers
     {
         private readonly string _notifyUrl;
 
-        public LineNotifyController()
+        public LineNotifyController(IConfiguration config)
         {
-            _notifyUrl = "https://notify-api.line.me/api/notify";
+            //TODO: 請先在 appsettings.json 中填入 Line Notify 服務的識別碼、密鑰、成功轉跳頁面等資訊
+            var lineConfig = config.GetSection("LineNotify");
+
+            _notifyUrl = lineConfig.GetValue<string>("notifyUrl");
         }
 
         // GET: api/LineNotify/SendMessage?target=PoyChang&message=HelloWorld
